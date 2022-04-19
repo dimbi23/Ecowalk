@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Ecowalk</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoiZGltYmkyMyIsImEiOiJja2ViZ3JybTgwOHBwMnhvYnFzM2x2OHRkIn0.PBP4Y8k9fXCQMfYFkWulLw</string>
+    <string name="notification_title">Ecowalking</string>
+    <string name="cancel_walking">Arrêter Ecowalking</string>
+    <string name="start_ecowalking">Starting Ecowalk</string>
+    <string name="notification_message">Ecowalk is running</string>
+    <string name="notification_channel_id">Channel</string>
+</resources>
