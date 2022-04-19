@@ -15,19 +15,21 @@ import com.wanowanconsult.ecowalk.MainActivity
 import com.wanowanconsult.ecowalk.R
 import com.wanowanconsult.ecowalk.data.model.MSensorEvent
 import com.wanowanconsult.ecowalk.data.model.SensorType
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class SensorService : Service(), SensorEventListener {
+@Singleton
+class SensorService @Inject constructor() : Service(), SensorEventListener {
     private val sensorManager
         get() = getSystemService(SENSOR_SERVICE) as SensorManager
     private val binder = LocalBinder()
 
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
+    private val _msgEvent = MutableStateFlow(MSensorEvent())
+    val msgEvent: StateFlow<MSensorEvent> = _msgEvent
+
     inner class LocalBinder : Binder() {
-        // Return this instance of LocalService so clients can call public methods
         fun getService(): SensorService = this@SensorService
     }
 
@@ -36,7 +38,7 @@ class SensorService : Service(), SensorEventListener {
         createNotificationChannel()
     }
 
-    private fun initSensor(){
+    private fun initSensor() {
         sensorManager.let { sm ->
             sm.getDefaultSensor(Sensor.TYPE_PROXIMITY).let {
                 sm.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
@@ -64,7 +66,7 @@ class SensorService : Service(), SensorEventListener {
         val notificationIntent = Intent(this, MainActivity::class.java)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent, 0
+            this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification: Notification = Notification.Builder(this, CHANNEL_ID)
@@ -91,10 +93,10 @@ class SensorService : Service(), SensorEventListener {
 
     override fun onSensorChanged(sensorEvent: SensorEvent) {
         if (sensorEvent.values.isNotEmpty()) {
-            val msgEvent = MSensorEvent()
-            msgEvent.type = SensorType.STEP_COUNTER
-            msgEvent.value = sensorEvent.values[0].toString()
-            Log.d(TAG, "Sensor: ${msgEvent.value}")
+            _msgEvent.value = MSensorEvent(
+                type = SensorType.STEP_COUNTER,
+                value = sensorEvent.values[0].toString()
+            )
         }
     }
 

@@ -1,9 +1,9 @@
 package com.wanowanconsult.ecowalk.data.model
 
-class MSensorEvent {
-    var type = SensorType.STEP_DETECTOR
-    var value = ""
-}
+data class MSensorEvent(
+    var type: SensorType = SensorType.STEP_DETECTOR,
+    var value: String = "",
+)
 
 enum class SensorType {
     STEP_DETECTOR,

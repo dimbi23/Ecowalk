@@ -3,7 +3,9 @@ package com.wanowanconsult.ecowalk
 import android.app.Application
 import android.content.Context
 import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class EcowalkApplication : Application(), Configuration.Provider {
     init {
         instance = this
