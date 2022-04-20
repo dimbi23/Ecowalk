@@ -1,12 +1,12 @@
 package com.wanowanconsult.ecowalk.presentation.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -23,18 +23,9 @@ fun HomeScreen(
     )*/
 
     val state = viewModel.state
-    val step = viewModel.step.collectAsState().value
-
-    Log.d("HomeScreen", "Step: $step")
+    val sensor = viewModel.sensorLiveData.observeAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = step.value
-        )
-        FloatingActionButton(
-            onClick = { viewModel.onEvent(HomeEvent.OnStartActivityButtonClick) },
-        ){
-
-        }
+        sensor.value?.let { Text(text = it.value) }
     }
 }
