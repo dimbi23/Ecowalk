@@ -3,7 +3,6 @@ package com.wanowanconsult.ecowalk.presentation.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,5 +26,8 @@ fun HomeScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         sensor.value?.let { Text(text = it.value) }
+        Button(onClick = {viewModel.onEvent(HomeEvent.OnRequestActivityRecognitionButtonClick)}, content = {
+
+        })
     }
 }
