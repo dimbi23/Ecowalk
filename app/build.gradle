@@ -72,6 +72,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation 'androidx.activity:activity-compose:1.4.0'
+
+    // Mapbox
     implementation 'com.mapbox.maps:android:10.4.0'
 
     implementation "androidx.work:work-runtime-ktx:$work_version"
@@ -97,7 +99,7 @@ dependencies {
 
     // Eventbus
     // Pub/Sub pattern
-    implementation("org.greenrobot:eventbus:3.3.1")
+    implementation "org.greenrobot:eventbus:3.3.1"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

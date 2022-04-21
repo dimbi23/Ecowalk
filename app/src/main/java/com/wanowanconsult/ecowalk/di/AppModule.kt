@@ -19,6 +19,8 @@ object AppModule {
             app,
             EcowalkDatabase::class.java,
             "ecowalk.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }
