@@ -96,6 +96,7 @@ dependencies {
     implementation "androidx.room:room-ktx:2.4.2"
 
     // Eventbus
+    // Pub/Sub pattern
     implementation("org.greenrobot:eventbus:3.3.1")
 
     testImplementation 'junit:junit:4.13.2'

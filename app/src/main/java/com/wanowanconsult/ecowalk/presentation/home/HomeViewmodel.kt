@@ -18,7 +18,6 @@ class HomeViewmodel @Inject constructor(
     repository: ActivityRepositoryImpl,
 ) : ViewModel() {
     var state by mutableStateOf(HomeState())
-    var sensorLiveData = repository.fetchSensorData()
 
     private var activityRecognitionPermissionStatus: PermissionStatus? = null
     private var accessCoarseLocationPermissionStatus: PermissionStatus? = null
