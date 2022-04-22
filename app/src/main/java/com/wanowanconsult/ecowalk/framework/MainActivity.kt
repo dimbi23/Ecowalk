@@ -8,17 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.wanowanconsult.ecowalk.framework.event.RequestPermissionEvent
 import com.wanowanconsult.ecowalk.framework.manager.PermissionManager.getPermissionStatus
+import com.wanowanconsult.ecowalk.presentation.NavGraphs
 import com.wanowanconsult.ecowalk.presentation.home.HomeViewmodel
-import com.wanowanconsult.ecowalk.presentation.home.NavGraphs
 import com.wanowanconsult.ecowalk.ui.navigation.BottomBar
 import com.wanowanconsult.ecowalk.ui.theme.EcowalkTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,33 +32,10 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         permissions.forEach { permission ->
-            when (permission.key) {
-                Manifest.permission.ACTIVITY_RECOGNITION -> {
-                    viewmodel.setActivityRecognitionPermissionStatus(
-                        getPermissionStatus(
-                            this,
-                            permission = permission.key
-                        )
-                    )
-                }
-                Manifest.permission.ACCESS_FINE_LOCATION -> {
-                    viewmodel.setAccessFineLocationPermissionStatus(
-                        getPermissionStatus(
-                            this,
-                            permission = permission.key
-                        )
-                    )
-                }
-
-                Manifest.permission.ACCESS_COARSE_LOCATION -> {
-                    viewmodel.setAccessCoarseLocationPermissionStatus(
-                        getPermissionStatus(
-                            this,
-                            permission = permission.key
-                        )
-                    )
-                }
-            }
+            viewmodel.setPermissionStatus(
+                permissionName = permission.key,
+                newPermissionStatus = getPermissionStatus(this, permission = permission.key)
+            )
         }
     }
 

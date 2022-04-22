@@ -11,7 +11,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ramcosta.composedestinations.navigation.navigateTo
-import com.wanowanconsult.ecowalk.presentation.home.appDestination
+import com.wanowanconsult.ecowalk.presentation.appDestination
 
 @Composable
 fun BottomBar(

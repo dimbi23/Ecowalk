@@ -1,12 +1,12 @@
 package com.wanowanconsult.ecowalk.presentation.home
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wanowanconsult.ecowalk.data.repository.ActivityRepositoryImpl
+import com.wanowanconsult.ecowalk.framework.manager.BasePermissionManager
 import com.wanowanconsult.ecowalk.framework.manager.PermissionStatus
 import com.wanowanconsult.ecowalk.framework.event.RequestPermissionEvent
 import com.wanowanconsult.ecowalk.util.Resource
@@ -21,12 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewmodel @Inject constructor(
     private val repository: ActivityRepositoryImpl,
-) : ViewModel() {
+) : ViewModel(), BasePermissionManager {
     var state by mutableStateOf(HomeState())
 
-    private var activityRecognitionPermissionStatus: PermissionStatus? = null
-    private var accessCoarseLocationPermissionStatus: PermissionStatus? = null
-    private var accessFineLocationPermissionStatus: PermissionStatus? = null
+    override var permissionStatuses = mutableListOf(
+        mutableMapOf("android.permission.ACTIVITY_RECOGNITION" to PermissionStatus.PERMISSION_DENIED),
+        mutableMapOf("android.permission.ACCESS_FINE_LOCATION" to PermissionStatus.PERMISSION_DENIED),
+        mutableMapOf("android.permission.ACCESS_COARSE_LOCATION" to PermissionStatus.PERMISSION_DENIED),
+    )
 
     init {
         getTodayActivities()
@@ -40,33 +42,6 @@ class HomeViewmodel @Inject constructor(
             }
             is HomeEvent.OnRequestActivityRecognitionButtonClick -> {
                 requestPermission()
-            }
-        }
-    }
-
-    fun setActivityRecognitionPermissionStatus(newPermissionStatus: PermissionStatus) {
-        if (activityRecognitionPermissionStatus !== newPermissionStatus) {
-            activityRecognitionPermissionStatus = newPermissionStatus
-            if (activityRecognitionPermissionStatus === PermissionStatus.PERMISSION_GRANTED) {
-                Log.d("HomeViewmodel", "activityRecognitionPermissionStatus granted")
-            }
-        }
-    }
-
-    fun setAccessCoarseLocationPermissionStatus(newPermissionStatus: PermissionStatus) {
-        if (accessCoarseLocationPermissionStatus !== newPermissionStatus) {
-            accessCoarseLocationPermissionStatus = newPermissionStatus
-            if (accessCoarseLocationPermissionStatus === PermissionStatus.PERMISSION_GRANTED) {
-                Log.d("HomeViewmodel", "accessCoarseLocationPermissionStatus granted")
-            }
-        }
-    }
-
-    fun setAccessFineLocationPermissionStatus(newPermissionStatus: PermissionStatus) {
-        if (accessFineLocationPermissionStatus !== newPermissionStatus) {
-            accessFineLocationPermissionStatus = newPermissionStatus
-            if (accessFineLocationPermissionStatus === PermissionStatus.PERMISSION_GRANTED) {
-                Log.d("HomeViewmodel", "accessFineLocationPermissionStatus granted")
             }
         }
     }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "421326643591",
+    "project_id": "ecowalk-mg",
+    "storage_bucket": "ecowalk-mg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421326643591:android:b82fc5bd4fb2e16d72b322",
+        "android_client_info": {
+          "package_name": "com.wanowanconsult.ecowalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421326643591-g1jtrmce6s0qej6hgpkv5m3jdarkj7g2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs_rYBHecfOcGPmdPhd1NusOWI2kYBfVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421326643591-g1jtrmce6s0qej6hgpkv5m3jdarkj7g2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
