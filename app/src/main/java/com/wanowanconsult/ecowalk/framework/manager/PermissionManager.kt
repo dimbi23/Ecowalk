@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-
 enum class PermissionStatus {
     CAN_ASK_PERMISSION, PERMISSION_GRANTED, PERMISSION_DENIED
 }

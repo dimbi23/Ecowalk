@@ -1,6 +1,5 @@
 package com.wanowanconsult.ecowalk.framework
 
-import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,9 +11,8 @@ import androidx.compose.material.Scaffold
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.wanowanconsult.ecowalk.framework.event.RequestPermissionEvent
-import com.wanowanconsult.ecowalk.framework.manager.PermissionManager.getPermissionStatus
 import com.wanowanconsult.ecowalk.presentation.NavGraphs
-import com.wanowanconsult.ecowalk.presentation.home.HomeViewmodel
+import com.wanowanconsult.ecowalk.presentation.activity.ActivityViewmodel
 import com.wanowanconsult.ecowalk.ui.navigation.BottomBar
 import com.wanowanconsult.ecowalk.ui.theme.EcowalkTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,18 +23,13 @@ import org.greenrobot.eventbus.ThreadMode
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewmodel: HomeViewmodel by viewModels()
+    private val viewmodel: ActivityViewmodel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private val permissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        permissions.forEach { permission ->
-            viewmodel.setPermissionStatus(
-                permissionName = permission.key,
-                newPermissionStatus = getPermissionStatus(this, permission = permission.key)
-            )
-        }
+        viewmodel.setPermissionStatus(permissions)
     }
 
     override fun onStart() {
@@ -67,13 +60,7 @@ class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRequestStoragePermissionEvent(event: RequestPermissionEvent?) {
-        permissionRequest.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            )
-        )
+    fun onRequestPermissionEventEvent(event: RequestPermissionEvent) {
+        permissionRequest.launch(viewmodel.permissionsName.toTypedArray())
     }
 }

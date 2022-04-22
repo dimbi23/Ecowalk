@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wanowanconsult.ecowalk.data.repository.ActivityRepositoryImpl
+import com.wanowanconsult.ecowalk.domain.repository.ActivityRepository
 import com.wanowanconsult.ecowalk.framework.manager.BasePermissionManager
 import com.wanowanconsult.ecowalk.framework.manager.PermissionStatus
 import com.wanowanconsult.ecowalk.framework.event.RequestPermissionEvent
@@ -20,15 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewmodel @Inject constructor(
-    private val repository: ActivityRepositoryImpl,
-) : ViewModel(), BasePermissionManager {
+    private val repository: ActivityRepository,
+) : ViewModel() {
     var state by mutableStateOf(HomeState())
-
-    override var permissionStatuses = mutableListOf(
-        mutableMapOf("android.permission.ACTIVITY_RECOGNITION" to PermissionStatus.PERMISSION_DENIED),
-        mutableMapOf("android.permission.ACCESS_FINE_LOCATION" to PermissionStatus.PERMISSION_DENIED),
-        mutableMapOf("android.permission.ACCESS_COARSE_LOCATION" to PermissionStatus.PERMISSION_DENIED),
-    )
 
     init {
         getTodayActivities()
@@ -41,13 +36,9 @@ class HomeViewmodel @Inject constructor(
 
             }
             is HomeEvent.OnRequestActivityRecognitionButtonClick -> {
-                requestPermission()
+                //requestPermission()
             }
         }
-    }
-
-    private fun requestPermission() {
-        EventBus.getDefault().post(RequestPermissionEvent())
     }
 
     private fun getTodayTotalStep() {
