@@ -54,18 +54,8 @@ class LocationProvider {
         distance = 0
     }
 
+    @SuppressLint("MissingPermission")
     fun getUserLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                EcowalkApplication.getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                EcowalkApplication.getApplicationContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-
         client.lastLocation.addOnSuccessListener { location ->
             val latLng = Pair(first = location.latitude, second = location.longitude)
             locations.add(latLng)

@@ -6,11 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.wanowanconsult.ecowalk.domain.model.Activity
 import com.wanowanconsult.ecowalk.domain.repository.ActivityRepository
 import com.wanowanconsult.ecowalk.framework.manager.LocationProvider
 import com.wanowanconsult.ecowalk.framework.manager.PermissionManager
 import com.wanowanconsult.ecowalk.framework.manager.StepCounterManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,10 +24,15 @@ class ActivityViewmodel @Inject constructor(
 ) : ViewModel(), PermissionManager {
 
     var state by mutableStateOf(ActivityState())
-    var locations = locationProvider.liveLocation
+    var location = locationProvider.liveLocation
     var step = stepCounterManager.liveSteps
+    var chrono = stepCounterManager.liveChronometer
 
     override val isPermissionRequestButtonClicked: MutableState<Boolean> = mutableStateOf(false)
+
+    init {
+        stepCounterManager.setupChronometer()
+    }
 
     override fun onPermissionGranted() {
         locationProvider.getUserLocation()
@@ -36,17 +44,28 @@ class ActivityViewmodel @Inject constructor(
     fun startTracking(){
         locationProvider.trackUser()
         stepCounterManager.setupStepCounter()
+        stepCounterManager.startChronometer()
     }
 
     fun stopTracking(){
         locationProvider.stopTracking()
         stepCounterManager.unloadStepCounter()
+        stepCounterManager.stopChronometer()
+
+        /*viewModelScope.launch {
+            step.value?.let { _step ->
+                repository.saveActivity(Activity(
+                    step = _step,
+                     pace =
+                ))
+            }
+        }*/
     }
 
     fun onEvent(event: ActivityEvent) {
         when (event) {
             is ActivityEvent.OnRequestPermissionsButtonClick -> {
-                //requestPermissions()
+                isPermissionRequestButtonClicked.value = true
             }
         }
     }

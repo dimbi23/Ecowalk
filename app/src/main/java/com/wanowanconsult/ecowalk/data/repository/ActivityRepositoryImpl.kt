@@ -3,6 +3,7 @@ package com.wanowanconsult.ecowalk.data.repository
 import com.wanowanconsult.ecowalk.data.local.EcowalkDatabase
 import com.wanowanconsult.ecowalk.data.local.StepSum
 import com.wanowanconsult.ecowalk.data.mapper.toActivity
+import com.wanowanconsult.ecowalk.data.mapper.toActivityEntity
 import com.wanowanconsult.ecowalk.domain.model.Activity
 import com.wanowanconsult.ecowalk.domain.repository.ActivityRepository
 import com.wanowanconsult.ecowalk.framework.manager.LocationProvider
@@ -38,6 +39,14 @@ class ActivityRepositoryImpl @Inject constructor(
             emit(Resource.Success(
                 data = stepSum
             ))
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun saveActivity(activity: Activity):  Flow<Resource<Unit>> {
+        return flow {
+            emit(Resource.Loading(true))
+            emit(Resource.Success(data = dao.insertActivity(activity.toActivityEntity())))
             emit(Resource.Loading(false))
         }
     }

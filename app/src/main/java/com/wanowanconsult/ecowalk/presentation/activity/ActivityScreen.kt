@@ -2,14 +2,12 @@ package com.wanowanconsult.ecowalk.presentation.activity
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -18,7 +16,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.plugin.gestures.gestures
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.ramcosta.composedestinations.annotation.Destination
@@ -27,7 +24,6 @@ import com.wanowanconsult.ecowalk.framework.manager.HandleRuntimePermission
 import com.wanowanconsult.ecowalk.ui.component.MapboxView
 import com.wanowanconsult.ecowalk.ui.component.rememberMapboxView
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
@@ -39,13 +35,13 @@ fun ActivityScreen(
 
     val state = viewModel.state
     val mapBoxView = rememberMapboxView()
-    val location by viewModel.locations.observeAsState()
+    val location by viewModel.location.observeAsState()
     val step by viewModel.step.observeAsState()
+    val chrono by viewModel.chrono.observeAsState()
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.ACTIVITY_RECOGNITION,
         )
     )
 
@@ -58,11 +54,13 @@ fun ActivityScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         if (permissionsState.allPermissionsGranted) {
+            viewModel.isPermissionRequestButtonClicked.value = true
             mapBoxView.location.addOnIndicatorPositionChangedListener(
                 onIndicatorPositionChangedListener
             )
             Text(text = "Lat: ${location?.first.toString()}, Long: ${location?.second.toString()}")
             Text(text = "Step: ${step.toString()}")
+            Text(text = "Chrono: ${chrono.toString()}")
             Button(onClick = {viewModel.startTracking()}) {
                 Text(text = "Start")
             }
