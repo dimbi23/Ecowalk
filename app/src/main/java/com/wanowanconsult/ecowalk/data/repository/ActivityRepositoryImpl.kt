@@ -5,6 +5,7 @@ import com.wanowanconsult.ecowalk.data.local.StepSum
 import com.wanowanconsult.ecowalk.data.mapper.toActivity
 import com.wanowanconsult.ecowalk.domain.model.Activity
 import com.wanowanconsult.ecowalk.domain.repository.ActivityRepository
+import com.wanowanconsult.ecowalk.framework.manager.LocationProvider
 import com.wanowanconsult.ecowalk.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,6 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class ActivityRepositoryImpl @Inject constructor(
     database: EcowalkDatabase,
+    private val locationProvider: LocationProvider
 ): ActivityRepository {
     private val dao = database.activityDao
 

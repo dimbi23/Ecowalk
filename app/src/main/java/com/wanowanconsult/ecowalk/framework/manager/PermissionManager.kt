@@ -1,31 +1,40 @@
 package com.wanowanconsult.ecowalk.framework.manager
 
-import android.app.Activity
-import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.MultiplePermissionsState
 
-enum class PermissionStatus {
-    CAN_ASK_PERMISSION, PERMISSION_GRANTED, PERMISSION_DENIED
+interface PermissionManager {
+    val isPermissionRequestButtonClicked: MutableState<Boolean>
+    fun onPermissionGranted()
 }
 
-object PermissionManager {
-    fun getPermissionStatus(
-        activity: Activity,
-        permission: String
-    ): PermissionStatus {
-        return if (PackageManager.PERMISSION_GRANTED ==
-            ContextCompat.checkSelfPermission(activity, permission)
+@ExperimentalPermissionsApi
+private fun PermissionManager.isOnClickPermissionGranted(
+    permissionsState: MultiplePermissionsState,
+): Boolean {
+    return isPermissionRequestButtonClicked.value
+            && permissionsState.allPermissionsGranted
+}
+
+@Composable
+fun HandleRuntimePermission(
+    permissionManager: PermissionManager,
+    permissionsState: MultiplePermissionsState,
+) {
+    if (!permissionManager.isPermissionRequestButtonClicked.value) return
+
+    if (permissionManager.isOnClickPermissionGranted(
+            permissionsState,
+        )
+    ) {
+        LaunchedEffect(
+            permissionManager.isPermissionRequestButtonClicked.value,
+            permissionsState.allPermissionsGranted
         ) {
-            PermissionStatus.PERMISSION_GRANTED
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(
-                activity,
-                permission
-            )
-        ) {
-            PermissionStatus.CAN_ASK_PERMISSION
-        } else {
-            PermissionStatus.PERMISSION_DENIED
+            permissionManager.onPermissionGranted()
         }
     }
 }

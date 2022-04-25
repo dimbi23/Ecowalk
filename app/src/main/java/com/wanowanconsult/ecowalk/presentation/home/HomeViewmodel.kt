@@ -5,16 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wanowanconsult.ecowalk.data.repository.ActivityRepositoryImpl
 import com.wanowanconsult.ecowalk.domain.repository.ActivityRepository
-import com.wanowanconsult.ecowalk.framework.manager.BasePermissionManager
-import com.wanowanconsult.ecowalk.framework.manager.PermissionStatus
-import com.wanowanconsult.ecowalk.framework.event.RequestPermissionEvent
 import com.wanowanconsult.ecowalk.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 import javax.inject.Inject
 
