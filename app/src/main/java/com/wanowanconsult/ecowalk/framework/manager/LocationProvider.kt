@@ -1,14 +1,11 @@
 package com.wanowanconsult.ecowalk.framework.manager
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.os.Looper
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.wanowanconsult.ecowalk.EcowalkApplication
@@ -26,13 +23,13 @@ class LocationProvider {
         override fun onLocationResult(result: LocationResult) {
             val currentLocation = result.lastLocation
             val latLng = Pair(first = currentLocation.latitude, second = currentLocation.longitude)
-            val lastLocation = locations.lastOrNull()
+            //val lastLocation = locations.lastOrNull()
 
             /*if (lastLocation != null) {
                 distance += SphericalUtil.computeDistanceBetween(lastLocation, latLng).roundToInt()
                 liveDistance.value = distance
             }*/
-
+            liveDistance.value = distance
             locations.add(latLng)
             liveLocations.value = locations
         }

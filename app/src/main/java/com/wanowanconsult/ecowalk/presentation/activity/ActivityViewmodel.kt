@@ -5,15 +5,19 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.wanowanconsult.ecowalk.domain.model.Activity
 import com.wanowanconsult.ecowalk.domain.repository.ActivityRepository
+import com.wanowanconsult.ecowalk.framework.event.StartActivityEvent
+import com.wanowanconsult.ecowalk.framework.event.StartServiceEvent
+import com.wanowanconsult.ecowalk.framework.event.StopActivityEvent
 import com.wanowanconsult.ecowalk.framework.manager.LocationProvider
 import com.wanowanconsult.ecowalk.framework.manager.PermissionManager
 import com.wanowanconsult.ecowalk.framework.manager.StepCounterManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,18 +31,31 @@ class ActivityViewmodel @Inject constructor(
     var location = locationProvider.liveLocation
     var step = stepCounterManager.liveSteps
     var chrono = stepCounterManager.liveChronometer
+    var liveChronometer = MutableLiveData<Long>(0)
 
     override val isPermissionRequestButtonClicked: MutableState<Boolean> = mutableStateOf(false)
 
     init {
+        Log.d("ActivityViewmodel", "Ato")
         stepCounterManager.setupChronometer()
     }
 
     override fun onPermissionGranted() {
-        locationProvider.getUserLocation()
-        locationProvider.liveLocation.observeForever {
-            Log.d("ActivityViewmodel", "Lat: ${it.first}, Long: ${it.second}")
+        Log.d("ActivityViewmodel", "Ato")
+        //locationProvider.getUserLocation()
+    }
+
+    fun formatChrono(time: Long?): String {
+        var result = ""
+        time?.let {
+            result = SimpleDateFormat("mm:ss", Locale.FRANCE).format(Date(it*1000))
         }
+
+        return result
+    }
+
+    fun startChronometer(){
+        EventBus.getDefault().post(StartActivityEvent())
     }
 
     fun startTracking(){

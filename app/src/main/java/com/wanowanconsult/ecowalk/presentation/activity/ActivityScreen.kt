@@ -1,18 +1,16 @@
 package com.wanowanconsult.ecowalk.presentation.activity
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.plugin.gestures.gestures
@@ -23,8 +21,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wanowanconsult.ecowalk.framework.manager.HandleRuntimePermission
 import com.wanowanconsult.ecowalk.ui.component.MapboxView
 import com.wanowanconsult.ecowalk.ui.component.rememberMapboxView
+import java.text.SimpleDateFormat
+import java.util.*
 
-@OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 @Destination(route = "activity")
@@ -37,7 +36,7 @@ fun ActivityScreen(
     val mapBoxView = rememberMapboxView()
     val location by viewModel.location.observeAsState()
     val step by viewModel.step.observeAsState()
-    val chrono by viewModel.chrono.observeAsState()
+    val chrono by viewModel.liveChronometer.observeAsState()
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -45,33 +44,43 @@ fun ActivityScreen(
         )
     )
 
+    LaunchedEffect(true){
+        if(permissionsState.allPermissionsGranted){
+            viewModel.onPermissionGranted()
+        }
+    }
+
     HandleRuntimePermission(permissionManager = viewModel, permissionsState = permissionsState)
 
     val onIndicatorPositionChangedListener = OnIndicatorPositionChangedListener {
         mapBoxView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).zoom(15.5).build())
         mapBoxView.gestures.focalPoint = mapBoxView.getMapboxMap().pixelForCoordinate(it)
     }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        if (permissionsState.allPermissionsGranted) {
-            viewModel.isPermissionRequestButtonClicked.value = true
+    if (permissionsState.allPermissionsGranted) {
+        Column(modifier = Modifier.fillMaxSize()) {
             mapBoxView.location.addOnIndicatorPositionChangedListener(
                 onIndicatorPositionChangedListener
             )
             Text(text = "Lat: ${location?.first.toString()}, Long: ${location?.second.toString()}")
             Text(text = "Step: ${step.toString()}")
-            Text(text = "Chrono: ${chrono.toString()}")
-            Button(onClick = {viewModel.startTracking()}) {
+
+            var result = ""
+            chrono?.let {
+                result = SimpleDateFormat("mm:ss", Locale.FRANCE).format(Date(it * 1000))
+            }
+
+            Text(text = "Chrono: $result")
+            Button(onClick = { viewModel.startChronometer() }) {
                 Text(text = "Start")
             }
             MapboxView(mapView = mapBoxView)
-        } else {
-            /*Button(onClick = { permissionsState.launchMultiplePermissionRequest() }) {
-                Text("Request permission")
-            }*/
-            Button(onClick = { viewModel.isPermissionRequestButtonClicked.value = true }) {
-                Text("Request permission")
-            }
+        }
+    } else {
+        /*Button(onClick = { permissionsState.launchMultiplePermissionRequest() }) {
+            Text("Request permission")
+        }*/
+        Button(onClick = { viewModel.isPermissionRequestButtonClicked.value = true }) {
+            Text("Request permission")
         }
     }
 }
