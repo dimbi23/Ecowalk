@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,10 +20,9 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wanowanconsult.ecowalk.framework.manager.HandleRuntimePermission
+import com.wanowanconsult.ecowalk.ui.component.ChronometerView
 import com.wanowanconsult.ecowalk.ui.component.MapboxView
 import com.wanowanconsult.ecowalk.ui.component.rememberMapboxView
-import java.text.SimpleDateFormat
-import java.util.*
 
 @SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
@@ -31,12 +31,11 @@ fun ActivityScreen(
     navigator: DestinationsNavigator,
     viewModel: ActivityViewmodel = hiltViewModel()
 ) {
-
     val state = viewModel.state
     val mapBoxView = rememberMapboxView()
     val location by viewModel.location.observeAsState()
     val step by viewModel.step.observeAsState()
-    val chrono by viewModel.liveChronometer.observeAsState()
+    val chronometer by viewModel.chronometer.observeAsState()
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -44,8 +43,8 @@ fun ActivityScreen(
         )
     )
 
-    LaunchedEffect(true){
-        if(permissionsState.allPermissionsGranted){
+    LaunchedEffect(false) {
+        if (permissionsState.allPermissionsGranted) {
             viewModel.onPermissionGranted()
         }
     }
@@ -57,6 +56,9 @@ fun ActivityScreen(
         mapBoxView.gestures.focalPoint = mapBoxView.getMapboxMap().pixelForCoordinate(it)
     }
     if (permissionsState.allPermissionsGranted) {
+
+        if(state.isLoading) CircularProgressIndicator()
+
         Column(modifier = Modifier.fillMaxSize()) {
             mapBoxView.location.addOnIndicatorPositionChangedListener(
                 onIndicatorPositionChangedListener
@@ -64,21 +66,14 @@ fun ActivityScreen(
             Text(text = "Lat: ${location?.first.toString()}, Long: ${location?.second.toString()}")
             Text(text = "Step: ${step.toString()}")
 
-            var result = ""
-            chrono?.let {
-                result = SimpleDateFormat("mm:ss", Locale.FRANCE).format(Date(it * 1000))
-            }
-
-            Text(text = "Chrono: $result")
-            Button(onClick = { viewModel.startChronometer() }) {
-                Text(text = "Start")
+            ChronometerView(viewModel)
+            Text(text = state.error)
+            Button(onClick = { viewModel.onEvent(ActivityEvent.OnStartStopActivityButtonClick) }) {
+                Text(text = if (state.isActivityRunning) "Stop" else "Start")
             }
             MapboxView(mapView = mapBoxView)
         }
     } else {
-        /*Button(onClick = { permissionsState.launchMultiplePermissionRequest() }) {
-            Text("Request permission")
-        }*/
         Button(onClick = { viewModel.isPermissionRequestButtonClicked.value = true }) {
             Text("Request permission")
         }

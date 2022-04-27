@@ -1,5 +1,6 @@
 package com.wanowanconsult.ecowalk.presentation.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 @HiltViewModel
@@ -29,15 +31,12 @@ class HomeViewmodel @Inject constructor(
             is HomeEvent.Refresh -> {
 
             }
-            is HomeEvent.OnRequestActivityRecognitionButtonClick -> {
-                //requestPermission()
-            }
         }
     }
 
     private fun getTodayTotalStep() {
         viewModelScope.launch {
-            repository.getTodayTotalStep(Calendar.getInstance().time)
+            repository.getTodayTotalStep()
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {
@@ -58,7 +57,7 @@ class HomeViewmodel @Inject constructor(
 
     private fun getTodayActivities() {
         viewModelScope.launch {
-            repository.getTodayActivities(Calendar.getInstance().time)
+            repository.getTodayActivities()
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {

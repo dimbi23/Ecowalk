@@ -7,7 +7,7 @@ import com.wanowanconsult.ecowalk.util.Converters
 
 @Database(
     entities = [ActivityEntity::class],
-    version = 3
+    version = 4
 )
 @TypeConverters(Converters::class)
 abstract class EcowalkDatabase: RoomDatabase() {

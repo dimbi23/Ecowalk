@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 interface ActivityRepository {
-    suspend fun getTodayActivities(today: Date): Flow<Resource<List<Activity>>>
-    suspend fun getTodayTotalStep(today: Date): Flow<Resource<StepSum>>
+    suspend fun getTodayActivities(): Flow<Resource<List<Activity>>>
+    suspend fun getTodayTotalStep(): Flow<Resource<StepSum>>
     suspend fun saveActivity(activity: Activity): Flow<Resource<Unit>>
 }

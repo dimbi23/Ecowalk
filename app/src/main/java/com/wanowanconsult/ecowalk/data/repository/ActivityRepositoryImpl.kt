@@ -21,10 +21,10 @@ class ActivityRepositoryImpl @Inject constructor(
 ): ActivityRepository {
     private val dao = database.activityDao
 
-    override suspend fun getTodayActivities(today: Date): Flow<Resource<List<Activity>>> {
+    override suspend fun getTodayActivities(): Flow<Resource<List<Activity>>> {
         return flow {
             emit(Resource.Loading(true))
-            val activities = dao.loadTodayActivities(today)
+            val activities = dao.loadTodayActivities()
             emit(Resource.Success(
                 data = activities.map { it.toActivity() }
             ))
@@ -32,10 +32,10 @@ class ActivityRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTodayTotalStep(today: Date): Flow<Resource<StepSum>> {
+    override suspend fun getTodayTotalStep(): Flow<Resource<StepSum>> {
         return flow {
             emit(Resource.Loading(true))
-            val stepSum = dao.getTodayTotalStep(today)
+            val stepSum = dao.getTodayTotalStep()
             emit(Resource.Success(
                 data = stepSum
             ))

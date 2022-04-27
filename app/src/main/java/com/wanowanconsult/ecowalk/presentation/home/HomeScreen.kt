@@ -20,6 +20,7 @@ import com.wanowanconsult.ecowalk.domain.model.Activity
 import com.wanowanconsult.ecowalk.ui.component.MapboxView
 import com.wanowanconsult.ecowalk.ui.component.ProgressView
 import com.wanowanconsult.ecowalk.ui.component.rememberMapboxView
+import kotlin.math.roundToInt
 
 @Destination(route = "home", start = true)
 @Composable
@@ -30,7 +31,7 @@ fun HomeScreen(
     val state = viewModel.state
 
     Column(modifier = Modifier.fillMaxSize()) {
-        ProgressView(indicatorValue = state.steps)
+        ProgressView(indicatorValue = state.steps, maxIndicatorValue = 1000)
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -59,5 +60,9 @@ fun HomeScreen(
 
 @Composable
 fun ActivityItem(activity: Activity, modifier: Modifier) {
-    Text(text = activity.step.toString())
+    Column {
+        Text(text = activity.step.toString())
+        Text(text = "${activity.pace.roundToInt()} steps/min")
+    }
+
 }

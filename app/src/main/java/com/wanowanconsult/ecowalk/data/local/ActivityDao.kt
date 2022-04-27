@@ -13,9 +13,9 @@ interface ActivityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertActivity(activityEntity: ActivityEntity)
 
-    @Query("SELECT * FROM activities WHERE date = :today ORDER BY date DESC")
-    suspend fun loadTodayActivities(today: Date): List<ActivityEntity>
+    @Query("SELECT * FROM activities")
+    suspend fun loadTodayActivities(): List<ActivityEntity>
 
-    @Query("SELECT SUM(step) as total FROM activities WHERE date = :today ORDER BY date DESC")
-    suspend fun getTodayTotalStep(today: Date): StepSum
+    @Query("SELECT SUM(step) as total FROM activities")
+    suspend fun getTodayTotalStep(): StepSum
 }

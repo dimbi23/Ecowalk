@@ -1,8 +1,8 @@
 package com.wanowanconsult.ecowalk.presentation.activity
 
-import com.wanowanconsult.ecowalk.util.Resource
-
 data class ActivityState(
     var isPermissionsGranted: Boolean = false,
-    var isLoading: Boolean = false
+    var isLoading: Boolean = false,
+    var isActivityRunning: Boolean = false,
+    var error: String = ""
 )
