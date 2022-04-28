@@ -1,11 +1,12 @@
 <resources>
-    <string name="app_name">Ecowalk</string>
-    <string name="mapbox_access_token">pk.eyJ1IjoiZGltYmkyMyIsImEiOiJja2ViZ3JybTgwOHBwMnhvYnFzM2x2OHRkIn0.PBP4Y8k9fXCQMfYFkWulLw</string>
-    <string name="notification_title">Ecowalking</string>
+    <string name="app_name" translatable="false">Ecowalk</string>
+    <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoiZGltYmkyMyIsImEiOiJja2ViZ3JybTgwOHBwMnhvYnFzM2x2OHRkIn0.PBP4Y8k9fXCQMfYFkWulLw</string>
+    <string name="notification_title" translatable="false">Ecowalking</string>
     <string name="cancel_walking">Arrêter Ecowalking</string>
-    <string name="start_ecowalking">Starting Ecowalk</string>
-    <string name="notification_message">Ecowalk is running</string>
-    <string name="notification_channel_id">Channel</string>
-    <string name="home_screen">Home</string>
-    <string name="activity_screen">Activity</string>
+    <string name="start_ecowalking">Commencer Ecowalk</string>
+    <string name="notification_message">Ecowalk est en marche</string>
+    <string name="notification_channel_id">Cannal</string>
+    <string name="home_screen">Accueil</string>
+    <string name="activity_screen">Activité</string>
+    <string name="step">pas</string>
 </resources>

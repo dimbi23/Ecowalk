@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel_walking">Stop Ecowalking</string>
+    <string name="start_ecowalking">Start Ecowalking</string>
+    <string name="notification_message">Ecowalk is running</string>
+    <string name="notification_channel_id">Channel</string>
+    <string name="home_screen">Home</string>
+    <string name="activity_screen">Activity</string>
+    <string name="step">steps</string>
+</resources>

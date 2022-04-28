@@ -13,4 +13,5 @@ enum class BottomBarDestination(
 ) {
     Home(HomeScreenDestination, R.drawable.ic_home , R.string.home_screen),
     Activity(ActivityScreenDestination, R.drawable.ic_activity, R.string.activity_screen),
+    Activities(ActivityScreenDestination, R.drawable.ic_energy, R.string.activity_screen),
 }
