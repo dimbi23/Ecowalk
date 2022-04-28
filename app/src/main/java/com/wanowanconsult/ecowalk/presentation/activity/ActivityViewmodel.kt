@@ -93,8 +93,8 @@ class ActivityViewmodel @Inject constructor(
                     step = step.value!!,
                     duration = time.toDouble() * 1000,
                     distance = 0f,
-                    date = Date(),
-                    sessionStart = Date()
+                    date = Date(Calendar.getInstance().timeInMillis),
+                    sessionStart = Date(Calendar.getInstance().timeInMillis)
                 )
             ).collect { resource ->
                 when (resource) {

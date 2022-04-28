@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -20,6 +21,8 @@ import com.wanowanconsult.ecowalk.domain.model.Activity
 import com.wanowanconsult.ecowalk.ui.component.MapboxView
 import com.wanowanconsult.ecowalk.ui.component.ProgressView
 import com.wanowanconsult.ecowalk.ui.component.rememberMapboxView
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.roundToInt
 
 @Destination(route = "home", start = true)
@@ -61,8 +64,22 @@ fun HomeScreen(
 @Composable
 fun ActivityItem(activity: Activity, modifier: Modifier) {
     Column {
-        Text(text = activity.step.toString())
+        Text(text = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(activity.date))
+        Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(activity.date))
+        Text(text = "${activity.step.toString()} steps")
         Text(text = "${activity.pace.roundToInt()} steps/min")
     }
+}
 
+@Preview
+@Composable
+fun PreviewActivityItem(){
+    ActivityItem(activity = Activity(
+        date = Date(Calendar.getInstance().timeInMillis),
+        distance = 10f,
+        duration = 10.0,
+        pace = 10.2,
+        sessionStart = Date(),
+        step = 200
+    ), modifier = Modifier.padding())
 }
