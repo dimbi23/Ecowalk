@@ -7,4 +7,8 @@
     <string name="home_screen">Home</string>
     <string name="activity_screen">Activity</string>
     <string name="step">steps</string>
+    <string name="activities_screen">Journal</string>
+    <string name="eco_screen">Eco</string>
+    <string name="profile_screen">Profile</string>
+    <string name="title_activity_list">Activities</string>
 </resources>

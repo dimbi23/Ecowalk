@@ -2,6 +2,7 @@ package com.wanowanconsult.ecowalk.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mapbox.maps.MapView
@@ -24,8 +25,8 @@ fun rememberMapboxView(): MapView {
 }
 
 @Composable
-fun MapboxView(mapView: MapView){
-    AndroidView({ mapView }) {
+fun MapboxView(mapView: MapView, modifier: Modifier) {
+    AndroidView(modifier = modifier, factory = { mapView }) {
         CoroutineScope(Dispatchers.Main).launch {
             val map = mapView.getMapboxMap()
             map.loadStyleUri("mapbox://styles/dimbi23/cl2eheoox000d15o2eji2cdci") {

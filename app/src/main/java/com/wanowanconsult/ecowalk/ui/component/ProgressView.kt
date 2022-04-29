@@ -4,7 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -23,9 +23,9 @@ fun ProgressView(
     canvasSize: Dp = 200.dp,
     indicatorValue: Int = 0,
     maxIndicatorValue: Int = 100,
-    backgroundIndicatorColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.2F),
+    backgroundIndicatorColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2F),
     backgroundIndicatorWidth: Float = 20f,
-    foregroundIndicatorColor: Color = MaterialTheme.colors.primary,
+    foregroundIndicatorColor: Color = MaterialTheme.colorScheme.primary,
     foregroundIndicatorWidth: Float = 20f
 ) {
     var allowedIndicatorValue by remember {

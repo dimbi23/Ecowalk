@@ -1,9 +1,9 @@
 package com.wanowanconsult.ecowalk.ui.navigation
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -20,9 +20,9 @@ fun BottomBar(
     val currentDestination = navController.currentBackStackEntryAsState()
         .value?.appDestination()
 
-    BottomNavigation {
+    NavigationBar {
         BottomBarDestination.values().forEach { destination ->
-            BottomNavigationItem(
+            NavigationBarItem(
                 selected = currentDestination == destination.direction,
                 onClick = {
                     navController.navigateTo(destination.direction) {
@@ -30,7 +30,7 @@ fun BottomBar(
                     }
                 },
                 icon = { Icon(ImageVector.vectorResource(destination.icon), contentDescription = stringResource(destination.label))},
-                label = { Text(stringResource(destination.label)) },
+                //label = { Text(stringResource(destination.label)) },
             )
         }
     }

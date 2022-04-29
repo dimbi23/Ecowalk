@@ -1,6 +1,7 @@
 package com.wanowanconsult.ecowalk.framework.manager
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.LocationCallback
@@ -53,10 +54,12 @@ class LocationProvider {
 
     @SuppressLint("MissingPermission")
     fun getUserLocation() {
-        client.lastLocation.addOnSuccessListener { location ->
-            val latLng = Pair(first = location.latitude, second = location.longitude)
-            locations.add(latLng)
-            liveLocation.value = latLng
+        client.lastLocation.addOnSuccessListener { location: Location? ->
+            location?.let {
+                val latLng = Pair(first = location.latitude, second = location.longitude)
+                locations.add(latLng)
+                liveLocation.value = latLng
+            }
         }
     }
 }

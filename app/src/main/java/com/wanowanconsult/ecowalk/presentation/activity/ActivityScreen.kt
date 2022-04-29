@@ -1,11 +1,7 @@
 package com.wanowanconsult.ecowalk.presentation.activity
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,7 +19,18 @@ import com.wanowanconsult.ecowalk.framework.manager.HandleRuntimePermission
 import com.wanowanconsult.ecowalk.ui.component.ChronometerView
 import com.wanowanconsult.ecowalk.ui.component.MapboxView
 import com.wanowanconsult.ecowalk.ui.component.rememberMapboxView
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material3.*
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.wanowanconsult.ecowalk.R
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 @Destination(route = "activity")
@@ -35,12 +42,21 @@ fun ActivityScreen(
     val mapBoxView = rememberMapboxView()
     val location by viewModel.location.observeAsState()
     val step by viewModel.step.observeAsState()
-    val chronometer by viewModel.chronometer.observeAsState()
+    val scaffoldState = rememberBottomSheetScaffoldState()
+    val scope = rememberCoroutineScope()
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
         )
+    )
+    val onIndicatorPositionChangedListener = OnIndicatorPositionChangedListener {
+        mapBoxView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).zoom(15.5).build())
+        mapBoxView.gestures.focalPoint = mapBoxView.getMapboxMap().pixelForCoordinate(it)
+    }
+
+    mapBoxView.location.addOnIndicatorPositionChangedListener(
+        onIndicatorPositionChangedListener
     )
 
     LaunchedEffect(false) {
@@ -51,15 +67,47 @@ fun ActivityScreen(
 
     HandleRuntimePermission(permissionManager = viewModel, permissionsState = permissionsState)
 
-    val onIndicatorPositionChangedListener = OnIndicatorPositionChangedListener {
-        mapBoxView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).zoom(15.5).build())
-        mapBoxView.gestures.focalPoint = mapBoxView.getMapboxMap().pixelForCoordinate(it)
-    }
     if (permissionsState.allPermissionsGranted) {
 
-        if(state.isLoading) CircularProgressIndicator()
+        //if(state.isLoading) CircularProgressIndicator()
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetContent = {
+                Box(
+                    Modifier.fillMaxWidth().height(128.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Swipe up to expand sheet")
+                }
+                Column(
+                    Modifier.fillMaxWidth().padding(64.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Sheet content")
+                    Spacer(Modifier.height(20.dp))
+                    Button(
+                        onClick = {
+                            scope.launch { scaffoldState.bottomSheetState.collapse() }
+                        }
+                    ) {
+                        Text("Click to collapse sheet")
+                    }
+                }
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {viewModel.onEvent(ActivityEvent.OnStartStopActivityButtonClick)}
+                ) {
+                    Icon(painterResource(R.drawable.ic_activity), contentDescription = "Localized description")
+                }
+            },
+        ) { innerPadding ->
+            MapboxView(mapView = mapBoxView, modifier = Modifier.padding(innerPadding))
+        }
+
+
+        /*Column(modifier = Modifier.fillMaxSize()) {
             mapBoxView.location.addOnIndicatorPositionChangedListener(
                 onIndicatorPositionChangedListener
             )
@@ -71,8 +119,9 @@ fun ActivityScreen(
             Button(onClick = { viewModel.onEvent(ActivityEvent.OnStartStopActivityButtonClick) }) {
                 Text(text = if (state.isActivityRunning) "Stop" else "Start")
             }
+
             MapboxView(mapView = mapBoxView)
-        }
+        }*/
     } else {
         Button(onClick = { viewModel.isPermissionRequestButtonClicked.value = true }) {
             Text("Request permission")

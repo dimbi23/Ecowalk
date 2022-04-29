@@ -2,7 +2,6 @@ package com.wanowanconsult.ecowalk.presentation.activity
 
 import android.os.Handler
 import android.util.Log
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,20 +11,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wanowanconsult.ecowalk.domain.model.Activity
 import com.wanowanconsult.ecowalk.domain.repository.ActivityRepository
-import com.wanowanconsult.ecowalk.framework.event.StartActivityEvent
-import com.wanowanconsult.ecowalk.framework.event.StartServiceEvent
-import com.wanowanconsult.ecowalk.framework.event.StopActivityEvent
 import com.wanowanconsult.ecowalk.framework.manager.LocationProvider
 import com.wanowanconsult.ecowalk.framework.manager.PermissionManager
 import com.wanowanconsult.ecowalk.framework.manager.StepCounterManager
 import com.wanowanconsult.ecowalk.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.intellij.lang.annotations.Flow
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -61,8 +52,7 @@ class ActivityViewmodel @Inject constructor(
     }
 
     override fun onPermissionGranted() {
-        Log.i("ActivityViewmodel", "Ato")
-        //locationProvider.getUserLocation()
+        locationProvider.getUserLocation()
     }
 
     private fun startStopActivity() {

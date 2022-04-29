@@ -9,4 +9,8 @@
     <string name="home_screen">Accueil</string>
     <string name="activity_screen">Activité</string>
     <string name="step">pas</string>
+    <string name="activities_screen">Journal</string>
+    <string name="eco_screen">Eco</string>
+    <string name="profile_screen">Profile</string>
+    <string name="title_activity_list">Activités</string>
 </resources>
